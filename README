@@ -1,1 +1,3 @@
-Hello
+INSTRUCTIONS:
+
+Open your Apps Script project and go to Deploy > Test deployments. Choose Editor add-on and click done.  With the Docs file you choose, go to the Extensions and choose our custom extension to run it. 
