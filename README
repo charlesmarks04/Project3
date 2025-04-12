@@ -1,4 +1,3 @@
 INSTRUCTIONS:
-
-SEE readme.pdf for readme. 
-*This will be properly updated later. 
+Open your Apps Script project and go to Deploy > Test deployments. Choose Editor add-on and click done.  With the Docs file you choose, go to the Extensions and choose our custom extension to run it.
+SEE readme.pdf for screenshots and transition diagram.
