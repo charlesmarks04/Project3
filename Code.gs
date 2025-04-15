@@ -9,13 +9,10 @@ function onOpen() {
 }
 
 function showSidebar() {
-  // loads sidebar.html
-  // CHANCE 'stackSidebar' TO SEE OTHER SIDEBARS
-  const html = HtmlService.createHtmlOutputFromFile('stackSidebar')
+  const html = HtmlService.createHtmlOutputFromFile('mainSidebar')
     .setTitle('InStruct')
     .setWidth(300);
 
-  // displays sidebar.html to google docs
   DocumentApp.getUi().showSidebar(html);
 }
 
@@ -27,51 +24,45 @@ function showDialog() {
   DocumentApp.getUi().showModalDialog(html, 'Preview Dialog');
 }
 
+function getHtmlFromFile(filename) {
+  return HtmlService.createHtmlOutputFromFile(filename).getContent();
+}
+
 // STACK HANDLERS
+
+function getStack() {
+  const props = PropertiesService.getDocumentProperties();
+  const stack = props.getProperty('stack');
+  return stack ? JSON.parse(stack) : [];
+}
+
+function setStack(stack) {
+  const props = PropertiesService.getDocumentProperties();
+  props.setProperty('stack', JSON.stringify(stack));
+}
+
 function handlePushStack(val) {
-  Logger.log('Push Value to Stack: ' + val);
-  return 'Pushed Value to Stack: ' + val;
+  Logger.log('Pushing to stack: ' + val);
+  const stack = getStack();
+  stack.push(val);
+  setStack(stack);
+  return `Pushed ${val}. Stack: [${stack.join(', ')}]`;
 }
 
 function handlePopStack() {
-  Logger.log('Pop Value from Stack');
-  return 'Popped Value from Stack';
+  const stack = getStack();
+  const popped = stack.pop();
+  setStack(stack);
+  return popped !== undefined
+    ? `Popped ${popped}. Stack: [${stack.join(', ')}]`
+    : 'Stack is empty.';
 }
 
 function deleteStack() {
-  Logger.log('Delete Stack');
-  return 'Deleted Stack';
+  const props = PropertiesService.getDocumentProperties();
+  props.deleteProperty('stack');
+  return 'Deleted Stack.';
 }
 
-// QUEUE HANDLERS
-function handlePushQueue(val) {
-  Logger.log('Push Value to Queue: ' + val);
-  return 'Pushed Value to Queue: ' + val;
-}
-
-function handlePopQueue() {
-  Logger.log('Pop Value from Queue');
-  return 'Popped Value from Queue';
-}
-
-function deleteQueue() {
-  Logger.log('Delete Queue');
-  return 'Deleted Queue';
-}
-
-// LINKED LIST HANDLERS
-function handleAddLinkedList(val) {
-  Logger.log('Add Value to LinkedList: ' + val);
-  return 'Add Value to LinkedList: ' + val;
-}
-
-function handleRemoveLinkedList() {
-  Logger.log('Remove Value from Linked List');
-  return 'Remove Value from Linked List';
-}
-
-function deleteLinkedList() {
-  Logger.log('Delete Linked List');
-  return 'Deleted Linked List';
-}
+// DIALOG HANDLERS
 

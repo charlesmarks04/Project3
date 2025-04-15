@@ -3,92 +3,174 @@
   <head>
     <style>
       body {
-        font-family: Arial, sans-serif;
-        padding: 10px;
-        background-color: #f2f2f2;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #fafafa;
+        padding: 0;
+        margin: 0;
       }
+
+      .container {
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      h2 {
+        text-align: center;
+        margin-top: 0;
+        color: #333;
+      }
+
+      h3 {
+        font-weight: normal;
+        color: #666;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .tree-values {
+        font-size: 16px;
+        font-weight: bold;
+        color: #4285F4;
+        background-color: #f0f7ff;
+        padding: 8px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        text-align: center;
+        border: 1px solid #d0e4ff;
+      }
+
       input {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 10px;
         margin-top: 10px;
-        width: 257px;
-        border: 1.75px solid #bfbfbf;
-        border-radius: 5px;
+        border: 1.5px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+        transition: border-color 0.2s;
       }
+
+      input:focus {
+        outline: none;
+        border-color: #4285F4;
+      }
+
       button {
+        width: 100%;
+        padding: 10px;
         margin-top: 10px;
-        width: 265px;
-        background-color: #d9d9d9;
-        border: 1.75px solid #bfbfbf;
-        border-radius: 5px;
+        font-size: 14px;
+        border: none;
+        border-radius: 6px;
+        background-color: #e0e0e0;
+        color: #333;
+        transition: background-color 0.2s, color 0.2s;
       }
+
       button:hover {
+        background-color: #d0d0d0;
         cursor: pointer;
-        background-color: #bfbfbf;
       }
+
+      .half-row {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .half-button {
+        flex: 1;
+        padding: 10px;
+        font-size: 14px;
+        border: none;
+        border-radius: 6px;
+        background-color: #e0e0e0;
+        color: #333;
+        transition: background-color 0.2s;
+      }
+
+      .half-button:hover {
+        background-color: #d0d0d0;
+        cursor: pointer;
+      }
+
       .deleteButton {
-        background-color: #c15552; 
-        color: #f2f2f2;
-        border: 1.75px solid #b22b27;
+        background-color: #c15552;
+        color: #fff;
       }
+
       .deleteButton:hover {
-        cursor: pointer;
         background-color: #b22b27;
       }
-      .halfButton {
-        width: 129.75px;
+
+      .response {
+        margin-top: 15px;
+        text-align: center;
+        font-size: 13px;
+        color: #777;
       }
     </style>
   </head>
   <body>
-    <h2>Manage Binary Search Tree</h2>
-    <!--Display values from regex parsing instead of placeholder values-->
-    <h3 style='font-weight: normal;'>Current Values:</h3>
-    <h3 style='font-weight: normal; text-align: center;'>[2, 6, 7]</h3>
+    <div class="container">
+      <h2>Manage Binary Search Tree</h2>
 
-    <!--add value input and button-->
-    <input type='text' id='addValueBST' placeholder="Input Value..."/>
-    <button onclick="addValueBST()">Add</button>
+      <h3>Current Values:</h3>
+      <div class="tree-values">[2, 6, 7]</div>
 
-    <!--remove value input and button-->
-    <input type='text' id='removeValueBST' placeholder='Input Value...'/>
-    <button onclick="removeValueBST()">Remove</button>
+      <!-- Add value -->
+      <input type="text" id="addValueBST" placeholder="Value to Add" />
+      <button onclick="addValueBST()">Add</button>
 
-    <!--sort values by buttons-->
-    <button class='halfButton' onclick="sortMaxBST()">Sort By Max</button>
-    <button class='halfButton' onclick="sortMinBST()">Sort By Min</button>
+      <!-- Remove value -->
+      <input type="text" id="removeValueBST" placeholder="Value to Remove" />
+      <button onclick="removeValueBST()">Remove</button>
 
-    <!-- preview button -->
-    <button onclick="openDialog()">Preview</button>
+      <!-- Traversal buttons -->
+      <div class="half-row">
+        <button class="half-button" onclick="sortMaxBST()">Traverse Max to Min</button>
+        <button class="half-button" onclick="sortMinBST()">Traverse Min to Max</button>
+      </div>
 
-    <!--delete binary search tree button-->
-    <button class='deleteButton' onclick="deleteBST()">Delete Binary Search Tree</button>
+      <!-- Preview & Delete -->
+      <button onclick="openDialog()">Preview</button>
+      <button class="deleteButton" onclick="deleteBST()">Delete Binary Search Tree</button>
+
+      <div class="response" id="response"></div>
+    </div>
 
     <script>
       function addValueBST() {
-        const val = document.getElementById('pushValueBST').value;
-        // ADD VAL TO BST
-        google.script.run.withSuccessHandler(function(response) {
-          document.getElementById('response').textContent = response;
-        }).handleAddBST(val);
+        const val = document.getElementById('addValueBST').value;
+        google.script.run.withSuccessHandler(updateResponse).handleAddBST(val);
       }
 
       function removeValueBST() {
-        // POP VAL FROM BST
-        google.script.run.withSuccessHandler(function(response) {
-          document.getElementById('response').textContent = response;
-        }).handleRemoveBST();
+        const val = document.getElementById('removeValueBST').value;
+        google.script.run.withSuccessHandler(updateResponse).handleRemoveBST(val);
       }
 
-      function deleteLinkedList() {
-        // DELETE LINKED LIST FROM DOC
-        google.script.run.withSuccessHandler(function(response) {
-          document.getElementById('response').textContent = response;
-        }).handleDeleteLinkedList();
+      function sortMaxBST() {
+        google.script.run.withSuccessHandler(updateResponse).handleSortBST('desc');
+      }
+
+      function sortMinBST() {
+        google.script.run.withSuccessHandler(updateResponse).handleSortBST('asc');
+      }
+
+      function deleteBST() {
+        google.script.run.withSuccessHandler(updateResponse).handleDeleteBST();
       }
 
       function openDialog() {
-        google.script.run.showDialog(); // THIS is the key line!
+        google.script.run.showDialog();
       }
 
+      function updateResponse(response) {
+        document.getElementById('response').textContent = response;
+      }
     </script>
   </body>
 </html>

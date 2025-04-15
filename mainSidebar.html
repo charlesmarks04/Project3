@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 10px;
+        background-color: #fafafa;
+      }
+
+      .tab-container {
+        display: flex;
+        border-bottom: 2px solid #ccc;
+        margin-bottom: 10px;
+      }
+
+      .tab {
+        padding: 10px 16px;
+        margin-right: 4px;
+        border: none;
+        background-color: transparent;
+        font-size: 14px;
+        font-weight: 500;
+        color: #444;
+        cursor: pointer;
+        border-radius: 6px 6px 0 0;
+        transition: all 0.2s ease-in-out;
+        position: relative;
+      }
+
+      .tab:hover {
+        background-color: #e0e0e0;
+      }
+
+      .tab.active {
+        background-color: #ffffff;
+        color: #000;
+        box-shadow: 0 -2px 0 #4285F4 inset;
+      }
+
+      .content {
+        background-color: #ffffff;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 0 0 8px 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        min-height: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="tab-container">
+      <button class="tab" onclick="loadStructure('stackSidebar', this)">Stack</button>
+      <button class="tab" onclick="loadStructure('queueSidebar', this)">Queue</button>
+      <button class="tab" onclick="loadStructure('linkedListSidebar', this)">Linked List</button>
+      <button class="tab" onclick="loadStructure('bstSidebar', this)">Tree</button>
+    </div>
+
+    <div class="content" id="structure-content">
+      Loading...
+    </div>
+
+    <script>
+      // Global function router
+      function runOperation(op) {
+        if (currentStructure === 'stackSidebar') {
+          if (op === 'push') pushValueStack();
+          else if (op === 'pop') popValueStack();
+          else if (op === 'delete') deleteStack();
+        }
+        // Add cases for other structures later
+      }
+
+      function updateStackDisplay() {
+        google.script.run.withSuccessHandler(function(stack) {
+          document.getElementById('stackDisplay').textContent = `[${stack.join(', ')}]`;
+        }).getStack();
+      }
+
+      function pushValueStack() {
+        const val = document.getElementById('pushValueStack').value;
+        google.script.run.withSuccessHandler(function(response) {
+          document.getElementById('response').textContent = response;
+          updateStackDisplay();
+        }).handlePushStack(val);
+      }
+
+      function popValueStack() {
+        google.script.run.withSuccessHandler(function(response) {
+          document.getElementById('response').textContent = response;
+          updateStackDisplay();
+        }).handlePopStack();
+      }
+
+      function deleteStack() {
+        google.script.run.withSuccessHandler(function(response) {
+          document.getElementById('response').textContent = response;
+          updateStackDisplay();
+        }).deleteStack();
+      }
+
+      let currentStructure = '';
+
+      function loadStructure(filename, el) {
+        currentStructure = filename; // <-- capture context
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        el.classList.add('active');
+
+        google.script.run.withSuccessHandler(html => {
+          document.getElementById('structure-content').innerHTML = html;
+
+          if (filename === 'stackSidebar') {
+            updateStackDisplay();
+          }
+        }).getHtmlFromFile(filename);
+      }
+
+      function openDialog() {
+        google.script.run.showDialog();
+      }
+
+      window.onload = () => {
+        document.querySelector('.tab').click(); // load first structure
+      };
+    </script>
+  </body>
+</html>
