@@ -29,7 +29,7 @@
         text-align: center;
       }
 
-      .tree-values {
+      .structure-values {
         font-size: 16px;
         font-weight: bold;
         color: #4285F4;
@@ -74,28 +74,6 @@
         cursor: pointer;
       }
 
-      .half-row {
-        display: flex;
-        gap: 10px;
-        margin-top: 10px;
-      }
-
-      .half-button {
-        flex: 1;
-        padding: 10px;
-        font-size: 14px;
-        border: none;
-        border-radius: 6px;
-        background-color: #e0e0e0;
-        color: #333;
-        transition: background-color 0.2s;
-      }
-
-      .half-button:hover {
-        background-color: #d0d0d0;
-        cursor: pointer;
-      }
-
       .deleteButton {
         background-color: #c15552;
         color: #fff;
@@ -117,60 +95,16 @@
     <div class="container">
       <h2>Manage Binary Search Tree</h2>
 
-      <h3>Current Values:</h3>
-      <div class="tree-values">[2, 6, 7]</div>
+      <h3>Current Tree:</h3>
+      <div class="structure-values" id="treeDisplay">Loading...</div>
 
-      <!-- Add value -->
-      <input type="text" id="addValueBST" placeholder="Value to Add" />
-      <button onclick="addValueBST()">Add</button>
-
-      <!-- Remove value -->
-      <input type="text" id="removeValueBST" placeholder="Value to Remove" />
-      <button onclick="removeValueBST()">Remove</button>
-
-      <!-- Traversal buttons -->
-      <div class="half-row">
-        <button class="half-button" onclick="sortMaxBST()">Traverse Max to Min</button>
-        <button class="half-button" onclick="sortMinBST()">Traverse Min to Max</button>
-      </div>
-
-      <!-- Preview & Delete -->
-      <button onclick="openDialog()">Preview</button>
-      <button class="deleteButton" onclick="deleteBST()">Delete Binary Search Tree</button>
+      <input type="text" id="insertValueTree" placeholder="Input Value..." />
+      <button onclick="runOperation('insert')">Insert</button>
+      <button onclick="runOperation('remove')">Remove</button>
+      <button onclick="openTreeDialog()">Preview</button>
+      <button class="deleteButton" onclick="deleteTree()">Delete Tree</button>
 
       <div class="response" id="response"></div>
     </div>
-
-    <script>
-      function addValueBST() {
-        const val = document.getElementById('addValueBST').value;
-        google.script.run.withSuccessHandler(updateResponse).handleAddBST(val);
-      }
-
-      function removeValueBST() {
-        const val = document.getElementById('removeValueBST').value;
-        google.script.run.withSuccessHandler(updateResponse).handleRemoveBST(val);
-      }
-
-      function sortMaxBST() {
-        google.script.run.withSuccessHandler(updateResponse).handleSortBST('desc');
-      }
-
-      function sortMinBST() {
-        google.script.run.withSuccessHandler(updateResponse).handleSortBST('asc');
-      }
-
-      function deleteBST() {
-        google.script.run.withSuccessHandler(updateResponse).handleDeleteBST();
-      }
-
-      function openDialog() {
-        google.script.run.showDialog();
-      }
-
-      function updateResponse(response) {
-        document.getElementById('response').textContent = response;
-      }
-    </script>
   </body>
 </html>

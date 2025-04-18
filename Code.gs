@@ -71,6 +71,77 @@ function showStackDialog() {
   DocumentApp.getUi().showModalDialog(html, 'Preview Dialog');
 }
 
+//BST HANDLERS
+
+function getTree() {
+  const props = PropertiesService.getDocumentProperties();
+  const tree = props.getProperty('tree');
+  return tree ? JSON.parse(tree) : { root: null };
+}
+
+function setTree(tree) {
+  const props = PropertiesService.getDocumentProperties();
+  props.setProperty('tree', JSON.stringify(tree));
+}
+
+function insertNode(value) {
+  let tree = getTree();
+  tree.root = insertToBST(tree.root, value);
+  setTree(tree);
+  return `Inserted ${value}.`;
+}
+
+function insertToBST(node, value) {
+  if (node === null) {
+    return { value: value, left: null, right: null };
+  }
+  if (value < node.value) {
+    node.left = insertToBST(node.left, value);
+  } else {
+    node.right = insertToBST(node.right, value);
+  }
+  return node;
+}
+
+function deleteNode(value) {
+  let tree = getTree();
+  if (!tree || !tree.root) {
+    return 'Tree is empty.';
+  }
+  tree.root = deleteFromBST(tree.root, value);
+  setTree(tree);
+  return `Deleted ${value}.`;
+}
+
+function deleteFromBST(node, value) {
+  if (node === null) return null;
+  if (value < node.value) {
+    node.left = deleteFromBST(node.left, value);
+  } else if (value > node.value) {
+    node.right = deleteFromBST(node.right, value);
+  } else {
+    if (node.left === null) return node.right;
+    if (node.right === null) return node.left;
+    node.value = minValue(node.right);
+    node.right = deleteFromBST(node.right, node.value);
+  }
+  return node;
+}
+
+function deleteTree() {
+  const props = PropertiesService.getDocumentProperties();
+  props.deleteProperty('tree');
+  return 'Deleted Tree.';
+}
+
+function showTreeDialog() {
+  const html = HtmlService.createHtmlOutputFromFile('bstDialog')
+    .setWidth(900)
+    .setHeight(700);
+  DocumentApp.getUi().showModalDialog(html, 'Preview Dialog');
+}
+
+
 // DIALOG HANDLERS
 
 function insertImageFromDataURL(dataUrl) {

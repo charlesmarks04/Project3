@@ -70,6 +70,11 @@
           else if (op === 'pop') popValueStack();
           else if (op === 'delete') deleteStack();
         }
+        else if (currentStructure === 'bstSidebar') {
+          if (op === 'insert') insertValueTree();
+          else if (op === 'remove') removeValueTree();
+          else if (op === 'delete') deleteTree();
+        }
         // Add cases for other structures later
       }
 
@@ -101,6 +106,40 @@
         }).deleteStack();
       }
 
+      function updateTreeDisplay() {
+          google.script.run.withSuccessHandler(function(tree) {
+          document.getElementById('treeDisplay').textContent = treeToString(tree.root);
+        }).getTree();
+      }
+
+      function treeToString(node) {
+        if (!node) return '';
+        let left = treeToString(node.left);
+        let right = treeToString(node.right);
+        return `${node.value}(${left || ' '}, ${right || ''})`;
+      }
+
+      function insertValueTree() {
+        const val = document.getElementById('insertValueTree').value;
+        google.script.run.withSuccessHandler(function(response) {
+          document.getElementById('response').textContent = response;
+          updateTreeDisplay();
+        }).insertNode(val);
+      }
+      function removeValueTree() {
+        const val = document.getElementById('insertValueTree').value;
+        google.script.run.withSuccessHandler(function(response) {
+          document.getElementById('response').textContent = response;
+          updateTreeDisplay();
+        }).deleteNode(val);
+      }
+      function deleteTree() {
+        google.script.run.withSuccessHandler(function(response) {
+          document.getElementById('response').textContent = response;
+          updateTreeDisplay();
+        }).deleteTree();
+      }
+
       let currentStructure = '';
 
       function loadStructure(filename, el) {
@@ -123,6 +162,10 @@
 
       function openStackDialog() {
         google.script.run.showStackDialog();
+      }
+
+      function openTreeDialog() {
+        google.script.run.showTreeDialog();
       }
 
       window.onload = () => {

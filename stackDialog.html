@@ -105,7 +105,6 @@
           .insertImageFromDataURL(dataUrl);
       }
 
-      // Fetch stack and draw it
       google.script.run.withSuccessHandler(function(stack) {
         drawStack(stack);
       }).getStack();

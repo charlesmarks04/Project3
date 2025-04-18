@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding: 16px;
+        background-color: #f8f9fa;
+        color: #333;
+      }
+
+      h2 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 10px;
+      }
+
+      canvas {
+        display: block;
+        margin: 16px auto;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .button {
+        display: block;
+        margin: 0 auto;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .button:hover {
+        background-color: #0056b3;
+      }
+
+      .footer {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 12px;
+        color: #888;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Binary Search Tree Preview</h2>
+    <canvas id="bstCanvas" height="100" width="150"></canvas>
+    <button class="button" onclick="insert()">Insert into Document</button>
+
+    <script>
+      const canvas = document.getElementById('bstCanvas');
+      const ctx = canvas.getContext('2d');
+      const boxWidth = 30;
+      const boxHeight = 20;
+      const padding = 15;
+
+      function drawTree(tree) {
+        if (!tree || !tree.root) return;
+
+        canvas.height = Math.pow(2, treeDepth(tree.root)) * 15 + 100;
+        canvas.width = Math.pow(2, treeDepth(tree.root)) * 25 + 100;
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+
+        const rootX = canvasWidth / 2;
+        const rootY = 50;
+
+        drawNode(tree.root, rootX, rootY, 1);
+      }
+      function drawNode(node, x, y, level) {
+        if (!node) return;
+       
+        const dx = 100 / Math.pow(2, level);
+        const dy = 60;
+
+        // Draw the node
+        ctx.fillStyle = "#3498db";
+        ctx.strokeStyle = "#2980b9";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.arc(x, y, boxWidth / 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.font = '16px Segoe UI';
+        ctx.fillStyle = "white";
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(node.value, x, y);
+
+        if (node.left) {
+          ctx.beginPath();
+          ctx.moveTo(x, y + boxHeight / 2);
+          ctx.lineTo(x - dx, y + dy);
+          ctx.stroke();
+          drawNode(node.left, x - dx, y + dy, level + 1);
+        }
+
+        if (node.right) {
+          ctx.beginPath();
+          ctx.moveTo(x, y + boxHeight / 2);
+          ctx.lineTo(x + dx, y + dy);
+          ctx.stroke();
+          drawNode(node.right, x + dx, y + dy, level + 1);
+        }
+      }
+
+      function treeDepth(node) {
+        if (!node) return 0;
+        const leftDepth = treeDepth(node.left);
+        const rightDepth = treeDepth(node.right);
+        return Math.max(leftDepth, rightDepth) + 1;
+      }
+
+      function insert() {
+        const dataUrl = canvas.toDataURL("image/png");
+        google.script.run
+          .withSuccessHandler(() => alert("✅ Image inserted into Doc!"))
+          .insertImageFromDataURL(dataUrl);
+      }
+
+      google.script.run.withSuccessHandler(function(tree) {
+        drawTree(tree);
+      }).getTree();
+
+    </script>
+  </body>
+</html>
