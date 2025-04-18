@@ -120,18 +120,18 @@
       }
 
       function insertValueTree() {
-        const val = document.getElementById('insertValueTree').value;
+        const val = document.getElementById('valueTree').value;
         google.script.run.withSuccessHandler(function(response) {
           document.getElementById('response').textContent = response;
           updateTreeDisplay();
-        }).insertNode(val);
+        }).insertNode(parseInt(val));
       }
       function removeValueTree() {
-        const val = document.getElementById('insertValueTree').value;
+        const val = document.getElementById('valueTree').value;
         google.script.run.withSuccessHandler(function(response) {
           document.getElementById('response').textContent = response;
           updateTreeDisplay();
-        }).deleteNode(val);
+        }).deleteNode(parseInt(val));
       }
       function deleteTree() {
         google.script.run.withSuccessHandler(function(response) {
@@ -152,6 +152,9 @@
 
           if (filename === 'stackSidebar') {
             updateStackDisplay();
+          }
+          if (filename === 'bstSidebar') {
+            updateTreeDisplay();
           }
         }).getHtmlFromFile(filename);
       }
