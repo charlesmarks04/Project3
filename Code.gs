@@ -64,5 +64,17 @@ function deleteStack() {
   return 'Deleted Stack.';
 }
 
+function showStackDialog() {
+  const html = HtmlService.createHtmlOutputFromFile('stackDialog')
+    .setWidth(400)
+    .setHeight(300);
+  DocumentApp.getUi().showModalDialog(html, 'Preview Dialog');
+}
+
 // DIALOG HANDLERS
 
+function insertImageFromDataURL(dataUrl) {
+  const blob = Utilities.base64Decode(dataUrl.split(',')[1]);
+  const image = Utilities.newBlob(blob, 'image/png', 'stack.png');
+  DocumentApp.getActiveDocument().getBody().appendImage(image);
+}

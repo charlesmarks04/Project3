@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding: 16px;
+        background-color: #f8f9fa;
+        color: #333;
+      }
+
+      h2 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 10px;
+      }
+
+      canvas {
+        display: block;
+        margin: 16px auto;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .button {
+        display: block;
+        margin: 0 auto;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .button:hover {
+        background-color: #0056b3;
+      }
+
+      .footer {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 12px;
+        color: #888;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Stack Preview</h2>
+    <canvas id="stackCanvas" width="180"></canvas>
+    <button class="button" onclick="insert()">Insert into Document</button>
+
+    <script>
+      const canvas = document.getElementById('stackCanvas');
+      const ctx = canvas.getContext('2d');
+      const boxHeight = 50;
+      const padding = 10;
+
+      function drawStack(stack) {
+        const totalHeight = stack.length * boxHeight + padding * 2;
+        canvas.height = totalHeight;
+        const width = canvas.width;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        stack.forEach((item, i) => {
+          const y = canvas.height - boxHeight * (i + 1) - padding;
+          const x = padding;
+
+          roundRect(ctx, x, y, width - 2 * padding, boxHeight, 10);
+          ctx.fillStyle = "#3498db";
+          ctx.fill();
+          ctx.strokeStyle = "#2980b9";
+          ctx.stroke();
+
+          ctx.font = '18px Segoe UI';
+          ctx.fillStyle = "white";
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(item, width / 2, y + boxHeight / 2);
+        });
+      }
+
+      function roundRect(ctx, x, y, width, height, radius) {
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + width - radius, y);
+        ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+        ctx.lineTo(x + width, y + height - radius);
+        ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+        ctx.lineTo(x + radius, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+      }
+
+      function insert() {
+        const dataUrl = canvas.toDataURL("image/png");
+        google.script.run
+          .withSuccessHandler(() => alert("✅ Image inserted into Doc!"))
+          .insertImageFromDataURL(dataUrl);
+      }
+
+      // Fetch stack and draw it
+      google.script.run.withSuccessHandler(function(stack) {
+        drawStack(stack);
+      }).getStack();
+    </script>
+  </body>
+</html>
