@@ -50,37 +50,57 @@
     </style>
   </head>
   <body>
-    <h2>Stack Preview</h2>
-    <canvas id="stackCanvas" width="180"></canvas>
+    <h2>Linked List Preview</h2>
+
+    <canvas id="llCanvas" width="180"></canvas>
+
     <button class="button" onclick="insert()">Insert into Document</button>
 
     <script>
-      const canvas = document.getElementById('stackCanvas');
+      const canvas = document.getElementById('llCanvas');
       const ctx = canvas.getContext('2d');
       const boxHeight = 50;
+      const boxWidth = 140;
       const padding = 10;
+      const arrowHeight = 20;
 
-      function drawStack(stack) {
-        const totalHeight = stack.length * boxHeight + padding * 2;
+      function drawLinkedList(list) {
+        const totalHeight = list.length * (boxHeight + arrowHeight) + padding * 2;
         canvas.height = totalHeight;
-        const width = canvas.width;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        stack.forEach((item, i) => {
-          const y = canvas.height - boxHeight * (i + 1) - padding;
-          const x = padding;
+        list.forEach((node, i) => {
+          const x = (canvas.width - boxWidth) / 2;
+          const y = padding + i * (boxHeight + arrowHeight);
 
-          roundRect(ctx, x, y, width - 2 * padding, boxHeight, 10);
+          //Draw node box
+          roundRect(ctx, x, y, boxWidth, boxHeight, 10);
           ctx.fillStyle = "#3498db";
           ctx.fill();
           ctx.strokeStyle = "#2980b9";
           ctx.stroke();
 
-          ctx.font = '18px Segoe UI';
+          //Draw node val
+          ctx.font = '16px Segoe UI';
           ctx.fillStyle = "white";
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          ctx.fillText(item, width / 2, y + boxHeight / 2);
+          ctx.fillText(node.value, x + boxWidth / 2, y + boxHeight / 2);
+
+          // draw arrow if not last node
+          if (i < list.length - 1) {
+            const arrowX = canvas.width / 2;
+            const arrowY = y + boxHeight;
+            ctx.beginPath();
+            ctx.moveTo(arrowX, arrowY);
+            ctx.lineTo(arrowX, arrowY + arrowHeight - 5);
+            ctx.lineTo(arrowX - 5, arrowY + arrowHeight - 10);
+            ctx.moveTo(arrowX, arrowY + arrowHeight - 5);
+            ctx.lineTo(arrowX + 5, arrowY + arrowHeight - 10);
+            ctx.strokeStyle = "#2c3e50";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+          }
         });
       }
 
@@ -101,13 +121,16 @@
       function insert() {
         const dataUrl = canvas.toDataURL("image/png");
         google.script.run
-          .withSuccessHandler(() => alert("✅ Image inserted into Doc!"))
+          .withSuccessHandler(() => alert(" Image inserted into Doc!"))
           .insertImageFromDataURL(dataUrl);
       }
 
-      google.script.run.withSuccessHandler(function(stack) {
-        drawStack(stack);
-      }).getStack();
+      // Get the linked list from Apps Script
+      google.script.run.withSuccessHandler(drawLinkedList).getLinkedList();
     </script>
   </body>
 </html>
+
+
+
+

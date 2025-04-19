@@ -75,6 +75,11 @@
           else if (op === 'remove') removeValueTree();
           else if (op === 'delete') deleteTree();
         }
+        else if (currentStructure === 'linkedListSidebar') {
+          if (op === 'insertAtIndex') insertAtIndex();
+          else if (op === 'removeAtIndex') removeAtIndex();
+          else if (op === 'delete') deleteLinkedList();
+        }
         // Add cases for other structures later
       }
 
@@ -140,6 +145,43 @@
         }).deleteTree();
       }
 
+
+      //LL FUNCS
+    function updateLinkedListDisplay() 
+    {
+      google.script.run.withSuccessHandler(function(list) {
+        const values = list.map(node => node.value);
+        document.querySelector('.list-values').textContent = `[${values.join('-> ')}]`;
+      }).getLinkedList();
+    }
+
+    function insertAtIndex() 
+    {
+      const val = document.getElementById('valueToInsert').value;
+      const index = document.getElementById('insertIndex').value;
+      google.script.run.withSuccessHandler(function(response) {
+        document.getElementById('response').textContent = response;
+        updateLinkedListDisplay();
+      }).handleAddLinkedList(`${val}|index|${index}`);
+    }
+
+    function removeAtIndex() 
+    {
+      const index = document.getElementById('removeIndex').value;
+      google.script.run.withSuccessHandler(function(response) {
+        document.getElementById('response').textContent = response;
+        updateLinkedListDisplay();
+      }).handleRemoveLinkedList(`${index}|index`);
+    }
+
+    function deleteLinkedList() 
+    {
+      google.script.run.withSuccessHandler(function(response) {
+        document.getElementById('response').textContent = response;
+        updateLinkedListDisplay();
+      }).handleDeleteLinkedList();
+    }
+
       let currentStructure = '';
 
       function loadStructure(filename, el) {
@@ -156,6 +198,10 @@
           if (filename === 'bstSidebar') {
             updateTreeDisplay();
           }
+          if(filename == 'linkedListSidebar')
+          {
+            updateLinkedListDisplay();
+          }
         }).getHtmlFromFile(filename);
       }
 
@@ -163,12 +209,18 @@
         google.script.run.showDialog();
       }
 
-      function openStackDialog() {
+      function openStackDialog() 
+      {
         google.script.run.showStackDialog();
       }
 
       function openTreeDialog() {
         google.script.run.showTreeDialog();
+      }
+
+      function openLLDialog()
+      {
+        google.script.run.showLLDialog();
       }
 
       window.onload = () => {

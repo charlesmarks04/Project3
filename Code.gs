@@ -149,3 +149,90 @@ function insertImageFromDataURL(dataUrl) {
   const image = Utilities.newBlob(blob, 'image/png', 'stack.png');
   DocumentApp.getActiveDocument().getBody().appendImage(image);
 }
+
+
+
+//Linked List handlers
+function getLinkedList() 
+{
+  const props = PropertiesService.getDocumentProperties();
+  const list = props.getProperty('linkedList');
+  return list ? JSON.parse(list) : [];
+}
+
+function setLinkedList(list) 
+{
+  const props = PropertiesService.getDocumentProperties();
+  props.setProperty('linkedList', JSON.stringify(list));
+}
+
+function handleAddLinkedList(data) 
+{
+  const [val, , indexStr] = data.split('|');  
+  const index = parseInt(indexStr, 10);
+  const list = getLinkedList();
+
+  if (isNaN(index) || index < 0 || index > list.length) 
+  {
+    return 'Invalid index.';
+  }
+
+  const newNode = { value: val, next: null };
+
+  // Insert into correct spot, maintaining "next" pointers
+  if (list.length === 0 || index === 0) 
+  {
+    // Insert at head
+    if (list[0]) newNode.next = 0;
+    list.unshift(newNode);
+  } 
+  else 
+  {
+    newNode.next = list[index] ? index : null;
+    list.splice(index, 0, newNode);
+    // Update previous node's next
+    if (index > 0 && list[index - 1]) 
+    {
+      list[index - 1].next = index;
+    }
+  }
+
+  setLinkedList(list);
+  return `Inserted ${val} at index ${index}.`;
+}
+
+function handleRemoveLinkedList(data) 
+{
+  const [indexStr] = data.split('|');
+  const index = parseInt(indexStr, 10);
+  const list = getLinkedList();
+
+  if (isNaN(index) || index < 0 || index >= list.length) 
+  {
+    return 'Invalid index.';
+  }
+
+  const removed = list.splice(index, 1)[0];
+  if (index > 0 && list[index - 1]) 
+  {
+    list[index - 1].next = index < list.length ? index : null;
+  }
+
+  setLinkedList(list);
+  return `Removed ${removed.value} at index ${index}.`;
+}
+
+function handleDeleteLinkedList() 
+{
+  const props = PropertiesService.getDocumentProperties();
+  props.deleteProperty('linkedList');
+  return 'Linked List deleted.';
+}
+
+function showLLDialog() 
+{
+  const html = HtmlService.createHtmlOutputFromFile('LLdialog')
+    .setWidth(900)
+    .setHeight(700);
+  DocumentApp.getUi().showModalDialog(html, 'Preview Dialog');
+}

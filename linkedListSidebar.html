@@ -96,20 +96,20 @@
       <h2>Manage Linked List</h2>
 
       <h3>Current Values:</h3>
-      <div class="list-values">[2, 6, 7]</div>
+      <div class="list-values"></div>
 
       <!-- Insert at index -->
       <input type="text" id="valueToInsert" placeholder="Value to Insert" />
       <input type="number" id="insertIndex" placeholder="Index to Insert At" />
-      <button onclick="insertAtIndex()">Insert at Index</button>
+      <button onclick="runOperation('insertAtIndex')">Insert at Index</button>
 
       <!-- Remove at index -->
       <input type="number" id="removeIndex" placeholder="Index to Remove At" />
-      <button onclick="removeAtIndex()">Remove at Index</button>
+      <button onclick="runOperation('removeAtIndex')">Remove at Index</button>
 
       <!-- Preview & Delete -->
-      <button onclick="openDialog()">Preview</button>
-      <button class="deleteButton" onclick="deleteLinkedList()">Delete Linked List</button>
+      <button onclick="openLLDialog()">Preview</button>
+      <button class="deleteButton" onclick="runOperation('delete')">Delete Linked List</button>
 
       <div class="response" id="response"></div>
     </div>
@@ -119,22 +119,9 @@
         document.getElementById('response').textContent = response;
       }
 
-      function insertAtIndex() {
-        const val = document.getElementById('valueToInsert').value;
-        const index = document.getElementById('insertIndex').value;
-        google.script.run.withSuccessHandler(handleResponse).handleAddLinkedList(val + '|index|' + index);
-      }
+      
 
-      function removeAtIndex() {
-        const index = document.getElementById('removeIndex').value;
-        google.script.run.withSuccessHandler(handleResponse).handleRemoveLinkedList(index + '|index');
-      }
-
-      function deleteLinkedList() {
-        google.script.run.withSuccessHandler(handleResponse).handleDeleteLinkedList();
-      }
-
-      function openDialog() {
+      function openLLDialog() {
         google.script.run.showDialog();
       }
     </script>
