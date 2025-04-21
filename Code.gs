@@ -150,6 +150,49 @@ function insertImageFromDataURL(dataUrl) {
   DocumentApp.getActiveDocument().getBody().appendImage(image);
 }
 
+// QUEUE HANDLERS
+
+function getQueue() {
+  const props = PropertiesService.getDocumentProperties();
+  const queue = props.getProperty('queue');
+  return queue ? JSON.parse(queue) : [];
+}
+
+function setQueue(queue) {
+  const props = PropertiesService.getDocumentProperties();
+  props.setProperty('queue', JSON.stringify(queue));
+}
+
+function handleEnQueue(val) {
+  Logger.log('Enqueued: ' + val);
+  const queue = getQueue();
+  queue.push(val);
+  setQueue(queue);
+  return `Enqueued ${val}. Queue: [${queue.join(', ')}]`;
+}
+
+function handleDeQueue() {
+  const queue = getQueue();
+  const deq = queue.shift();
+  setQueue(queue);
+  return deq !== undefined
+    ? `Dequeue ${deq}. Queue: [${queue.join(', ')}]`
+    : 'Queue is empty.';
+}
+
+function deleteQueue() {
+  const props = PropertiesService.getDocumentProperties();
+  props.deleteProperty('queue');
+  return 'Deleted Queue.';
+}
+
+function showQueueDialog() {
+  const html = HtmlService.createHtmlOutputFromFile('queueDialog')
+    .setWidth(400)
+    .setHeight(300);
+  DocumentApp.getUi().showModalDialog(html, 'Preview Dialog');
+}
+
 
 
 //Linked List handlers

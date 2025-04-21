@@ -80,7 +80,11 @@
           else if (op === 'removeAtIndex') removeAtIndex();
           else if (op === 'delete') deleteLinkedList();
         }
-        // Add cases for other structures later
+        else if (currentStructure === 'queueSidebar') {
+          if (op === 'enqueue') enqueueVal();
+          else if (op === 'dequeue') dequeueVal();
+          else if (op === 'delete') deleteQueue();
+        }
       }
 
       function updateStackDisplay() {
@@ -109,6 +113,34 @@
           document.getElementById('response').textContent = response;
           updateStackDisplay();
         }).deleteStack();
+      }
+
+      function updateQueueDisplay() {
+        google.script.run.withSuccessHandler(function(queue) {
+          document.getElementById('queueDisplay').textContent = `[${queue.join(', ')}]`;
+        }).getQueue();
+      }
+
+      function enqueueVal() {
+        const val = document.getElementById('ValueQueue').value;
+        google.script.run.withSuccessHandler(function(response) {
+          document.getElementById('response').textContent = response;
+          updateQueueDisplay();
+        }).handleEnQueue(val);
+      }
+
+      function dequeueVal() {
+        google.script.run.withSuccessHandler(function(response) {
+          document.getElementById('response').textContent = response;
+          updateQueueDisplay();
+        }).handleDeQueue();
+      }
+
+      function deleteQueue() {
+        google.script.run.withSuccessHandler(function(response) {
+          document.getElementById('response').textContent = response;
+          updateQueueDisplay();
+        }).deleteQueue();
       }
 
       function updateTreeDisplay() {
@@ -212,6 +244,11 @@
       function openStackDialog() 
       {
         google.script.run.showStackDialog();
+      }
+
+      function openQueueDialog() 
+      {
+        google.script.run.showQueueDialog();
       }
 
       function openTreeDialog() {

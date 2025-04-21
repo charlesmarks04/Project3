@@ -29,7 +29,7 @@
         text-align: center;
       }
 
-      .queue-values {
+      .structure-values {
         font-size: 16px;
         font-weight: bold;
         color: #4285F4;
@@ -96,40 +96,15 @@
       <h2>Manage Queue</h2>
 
       <h3>Current Values:</h3>
-      <div class="queue-values">[2, 6, 7]</div>
+      <div class="structure-values" id="queueDisplay">Loading...</div>
 
-      <input type="text" id="pushValueQueue" placeholder="Input Value..." />
-      <button onclick="pushValueQueue()">Enqueue</button>
-      <button onclick="popValueQueue()">Dequeue</button>
-      <button onclick="openDialog()">Preview</button>
+      <input type="text" id="ValueQueue" placeholder="Input Value..." />
+      <button onclick="runOperation('enqueue')">Enqueue</button>
+      <button onclick="runOperation('dequeue')">Dequeue</button>
+      <button onclick="openQueueDialog()">Preview</button>
       <button class="deleteButton" onclick="deleteQueue()">Delete Queue</button>
 
       <div class="response" id="response"></div>
     </div>
-
-    <script>
-      function pushValueQueue() {
-        const val = document.getElementById('pushValueQueue').value;
-        google.script.run.withSuccessHandler(function(response) {
-          document.getElementById('response').textContent = response;
-        }).handlePushQueue(val);
-      }
-
-      function popValueQueue() {
-        google.script.run.withSuccessHandler(function(response) {
-          document.getElementById('response').textContent = response;
-        }).handlePopQueue();
-      }
-
-      function deleteQueue() {
-        google.script.run.withSuccessHandler(function(response) {
-          document.getElementById('response').textContent = response;
-        }).handleDeleteQueue();
-      }
-
-      function openDialog() {
-        google.script.run.showDialog();
-      }
-    </script>
   </body>
 </html>
