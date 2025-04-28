@@ -67,7 +67,7 @@ function deleteStack() {
 function showStackDialog() {
   const html = HtmlService.createHtmlOutputFromFile('stackDialog')
     .setWidth(400)
-    .setHeight(300);
+    .setHeight(400);
   DocumentApp.getUi().showModalDialog(html, 'Preview Dialog');
 }
 
@@ -136,8 +136,8 @@ function deleteTree() {
 
 function showTreeDialog() {
   const html = HtmlService.createHtmlOutputFromFile('bstDialog')
-    .setWidth(900)
-    .setHeight(700);
+    .setWidth(400)
+    .setHeight(400);
   DocumentApp.getUi().showModalDialog(html, 'Preview Dialog');
 }
 
@@ -189,7 +189,7 @@ function deleteQueue() {
 function showQueueDialog() {
   const html = HtmlService.createHtmlOutputFromFile('queueDialog')
     .setWidth(400)
-    .setHeight(300);
+    .setHeight(400);
   DocumentApp.getUi().showModalDialog(html, 'Preview Dialog');
 }
 
@@ -275,7 +275,7 @@ function handleDeleteLinkedList()
 function showLLDialog() 
 {
   const html = HtmlService.createHtmlOutputFromFile('LLdialog')
-    .setWidth(900)
-    .setHeight(700);
+    .setWidth(400)
+    .setHeight(400);
   DocumentApp.getUi().showModalDialog(html, 'Preview Dialog');
 }
